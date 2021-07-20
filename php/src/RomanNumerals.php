@@ -24,11 +24,15 @@ class RomanNumerals
 
     public static function generate($number)
     {
+        if ($number <= 0) {
+            return false;
+        }
+
         $result = '';
+
         foreach (static::NUMERALS as $numeral => $arabic) {
             while ($number >= $arabic) {
                 $result .= $numeral;
-
                 $number -= $arabic;
             }
         }
