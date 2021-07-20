@@ -28,26 +28,56 @@ class BowlingGame
         $roll = 0;
 
         foreach (range(1, self::FRAMES_PER_GAME) as $frame) {
-            // check for a strike
-            if ($this->rolls[$roll] === 10) {
-                $score += $this->rolls[$roll];
-                $score += $this->rolls[$roll + 1];
-                $score += $this->rolls[$roll + 2];
+            if ($this->isStrike($roll)) {
+                $score += $this->pinCount($roll) + $this->strikeBonus($roll);
 
                 $roll += 1;
+
+                continue;
             }
 
-            // check for a spare
-            elseif ($this->rolls[$roll] + $this->rolls[$roll + 1] === 10) {
-                $score += $this->rolls[$roll] + $this->rolls[$roll + 1];
-                $score += $this->rolls[$roll + 2];
-                $roll += 2;
-            } else {
-                $score += $this->rolls[$roll] + $this->rolls[$roll + 1];
+            $score += $this->defaultFrameScore($roll);
+
+            if ($this->isSpare($roll)) {
+                $score += $this->spareBonus($roll);
 
                 $roll += 2;
+
+                continue;
             }
+
+            $roll += 2;
         }
         return $score;
+    }
+
+    private function isStrike(int $roll): bool
+    {
+        return $this->pinCount($roll) === 10;
+    }
+
+    private function isSpare(int $roll): bool
+    {
+        return $this->defaultFrameScore($roll) === 10;
+    }
+
+    private function defaultFrameScore(int $roll): int
+    {
+        return $this->pinCount($roll) + $this->pinCount($roll + 1);
+    }
+
+    private function strikeBonus(int $roll): int
+    {
+        return $this->pinCount($roll + 1) + $this->pinCount($roll + 2);
+    }
+
+    private function spareBonus(int $roll): int
+    {
+        return $this->pinCount($roll + 2);
+    }
+
+    private function pinCount(int $roll): int
+    {
+        return $this->rolls[$roll];
     }
 }
