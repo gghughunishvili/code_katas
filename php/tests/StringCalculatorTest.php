@@ -1,6 +1,7 @@
 <?php
 
 
+use App\StringCalculator;
 use PHPUnit\Framework\TestCase;
 
 class StringCalculatorTest extends TestCase
@@ -39,5 +40,11 @@ class StringCalculatorTest extends TestCase
      * 9. make sure you can also handle multiple delimiters with length longer than one char
      */
 
+    /** @test */
+    function it_evaluates_an_empty_string_as_0()
+    {
+        $calculator = new StringCalculator();
 
+        $this->assertSame(0, $calculator->add(''));
+    }
 }
